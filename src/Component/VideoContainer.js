@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {YOUTUBE_POPULAR_VIDEOS} from '../Utils/Constant';
-import VideoCard from './VideoCard';
+import VideoCard ,{AdvCard}from './VideoCard';
 import { Link } from 'react-router-dom';
 const VideoContainer = () => {
   const [video,setvideos]=useState([])
@@ -11,15 +11,12 @@ const VideoContainer = () => {
  const fetchVideo = async ()=>{
   try {
     // const res = await axios(youtube_video_url);
-    // console.log(res);
     const data =await fetch(YOUTUBE_POPULAR_VIDEOS);
     const json=await data.json();
-    console.log(json,'s')
     setvideos(json.items)
     
 
   } catch (error) {
-    console.log(error);
     
   }
  }
@@ -27,8 +24,10 @@ const VideoContainer = () => {
   return (
     <>
     <div className='flex flex-wrap'>
+    {video[0] &&    <AdvCard  info={video[0]}  />  }
+
     {
-      video.map(video =><Link to={`/watch?v=+${video.id}`}><VideoCard info={video} key={video.id}/></Link>)
+      video.map(video =><Link to={`/watch?v=+${video.id}`}><VideoCard info={video} key={video.id}  /></Link>)
     }
     </div>
      

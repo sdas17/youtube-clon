@@ -28,3 +28,27 @@ initialState:{
 }
 export const {toogleMenu}=appSlice.actions;
 export default appslice.reducer;
+
+//routing 
+//use searchparam
+//redux
+//hoc
+======================================================== machine round code
+hoc higher order component it takes component  doing some enhance ment and it return a component
+debouncing and thorating suppose if we pass is very fast it skip some evernt is know as debouncing and thorating
+
+#impo
+Debouncing:
+typing slow = 200 ms;
+typing fast =30ms;
+
+
+Perfomance:
+ - iphone pro max =14 letter *1000 = 14000
+ with debouncing = 3 api *1000=30000
+
+ Debouncing with 200 ms 
+ -if difference between 2 key strokes is <200 ms -Decaline>
+ > 200 ms make an api call
+
+ 
