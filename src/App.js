@@ -3,13 +3,30 @@ import './App.css';
 import Body from './Component/Body';
 import Header from './Component/Header';
 import Store from './Utils/Store';
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import VideoContainer from './Component/VideoContainer';
+import Watchpage from './Component/Watchpage';
+ const router = createBrowserRouter([{
+  path:"/",
+  element:<Body/>,
+  children:[
+    {
+      path:"/",
+      element:<VideoContainer/>,
+    },
+    {
+      path:"/watch",
+      element:<Watchpage/>
+    }
+  ]
+ }])
 function App() {
   return (
     <>
       <Provider store={Store}>
         <Header />
-        <Body />
+        {/* <Body /> */}
+        <RouterProvider router={router}></RouterProvider>
       </Provider>
  
     </>
