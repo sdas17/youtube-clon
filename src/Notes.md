@@ -51,4 +51,20 @@ Perfomance:
  -if difference between 2 key strokes is <200 ms -Decaline>
  > 200 ms make an api call
 
+
+ <!-- 
+ ****
+ 
+ search using live api and search using cache and seach using deboucning
+
+ 
+ 
+ ** -->
+
+ press I render component it will the useeffect start timer make an api after 200 ms suppose if even before 200 ms press item button it will bascially destroy method when destory method it will call useffect method method
+ 
+
+ nested level comment
+
+
  

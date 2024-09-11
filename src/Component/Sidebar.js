@@ -7,7 +7,7 @@ const Sidebar = () => {
   return !isMenuOpen ? "": (
       <div className="p-5 shadow-lg w-[250px] ">
         <ul>
-            <Link to={"/"}><li>Home</li></Link>
+            <Link to={"/"} className="cursor-pointer"><li >Home</li></Link>
             <li>Shorts</li>
             <li>Videos</li>
             <li>Live</li>

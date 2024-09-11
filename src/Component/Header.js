@@ -1,10 +1,83 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import {toggleMenu} from "../Utils/appSlice";
+import {chacheResults} from '../Utils/SearchSlice';
+import { useEffect, useState } from "react";
+import {youtube_Search_Api} from '../Utils/Constant';
 const Header = () => {
+    const [searchValue,setSearchValue]=useState('')
+    const [suggestion,setSuggestion]=useState([])
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const searchChache =useSelector((store)=>store.search)
+
     const dispatch=useDispatch();
     const sidemenuBar =()=>{
         dispatch(toggleMenu())
     }
+    
+   useEffect(()=>{
+    //make api call after key press
+    //time key after >200 ms then only api call is happen
+    //or else decline call
+    if (searchValue) {
+        setShowSuggestions(true)
+    } else {
+        setShowSuggestions(false)
+
+    }
+
+    const timer = setTimeout(()=>{
+        if (searchChache[searchValue]) {
+            setSuggestion(searchChache[searchValue])
+         } else {
+            fethcApiCalling()
+         }
+    }, 200); 
+
+    return () => {
+        clearTimeout(timer); // Use clearTimeout to clear setTimeout
+    };
+
+    
+   },[searchValue])
+
+   const fethcApiCalling = async () => {
+    console.log("apicalling-" + searchValue);
+    
+    const jsondata = await fetch(youtube_Search_Api + searchValue);
+    const data = await jsondata.json();
+    setSuggestion(data[1])
+    dispatch(chacheResults({
+        [searchValue]:data[1]
+    }
+    ))
+    console.log(data[1],suggestion);
+
+};
+/*
+* key -1
+-render the component
+-use effect()
+
+-start timer => make api call after 200 ms
+
+key-ip
+-re render the component
+-useeffect()
+start timer =>make api call after 200 ms
+
+when does clear out kui ki event  
+
+key -iph
+-re render the component
+useeffect()
+
+ 
+
+
+*/    
+  
+
+
     return (
         <div className=" grid grid-flow-col p-4 m-2 shadow-lg">
 
@@ -18,10 +91,36 @@ const Header = () => {
             </div>
 
 
+       
+
+            <div className="relative">
+
             <div className="col-span-10 px-10">
-            <input type="text" class="w-1/2 border border-gray-400 p-2 rounded-l-full focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"/>
-            <button className="border border-gray-400 py-2 px-3 rounded-r-full">🔎</button>
+                <div>
+                    <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)}
+                    // onfocus to show this and obblue hide this
+
+                    onFocus={()=>setShowSuggestions(true)}
+                    onBlur={()=>setShowSuggestions(false)}
+                    class="w-[572px] border border-gray-400 p-2 rounded-l-full focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+                    />
+                    <button className="border border-gray-400 py-2 px-3 rounded-r-full">🔎</button>
+                </div>
+
+                {(showSuggestions && suggestion?.length >0)&& (
+
+                    <div className="absolute  fixed bg-white py-2 px-5 w-[37rem] shadow rounded-lg border border-gray-400">
+                        <ul>
+                            {suggestion.map((s) => <li className="px-2 py-2 shadow-sm hover:bg-gray-100" key={s}>🔍 {s} </li>
+                            )}
+                        </ul>
+                    </div>
+                )}
+
+
             </div>
+            </div>
+           
 
             <div className="col-span-1">
                 <img className="h-12 m-0 p-2"

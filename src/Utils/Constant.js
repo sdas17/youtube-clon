@@ -7,4 +7,4 @@ export const YOUTUBE_POPULAR_VIDEOS =
   GOOGLE_API_KEY;
 
   //youtube search api search api 
-  export const youtube_Search_Api="http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=Dev"
+  export const youtube_Search_Api="http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q="
