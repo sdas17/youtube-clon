@@ -8,3 +8,6 @@ export const YOUTUBE_POPULAR_VIDEOS =
 
   //youtube search api search api 
   export const youtube_Search_Api="http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q="
+
+export const offset_livechat=10
+  //live chat ==>>>>>>> infinite scroll ==>>>>>>>>>>>>>>>>>pagination

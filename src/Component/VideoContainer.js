@@ -2,24 +2,32 @@ import React, { useEffect, useState } from 'react'
 import {YOUTUBE_POPULAR_VIDEOS} from '../Utils/Constant';
 import VideoCard ,{AdvCard}from './VideoCard';
 import { Link } from 'react-router-dom';
+import Shimmer from './Shimmer';
+
 const VideoContainer = () => {
   const [video,setvideos]=useState([])
+
   useEffect (()=>{
       fetchVideo();
   },[])
-    
+ 
  const fetchVideo = async ()=>{
   try {
     // const res = await axios(youtube_video_url);
+    
     const data =await fetch(YOUTUBE_POPULAR_VIDEOS);
     const json=await data.json();
-    setvideos(json.items)
+    console.log(json);
     
+    setvideos(json.items)
+
 
   } catch (error) {
     
   }
  }
+ 
+ if (!video.length) return <Shimmer />
 
   return (
     <>
