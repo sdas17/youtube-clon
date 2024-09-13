@@ -7,7 +7,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import VideoContainer from './Component/VideoContainer';
 import Watchpage from './Component/Watchpage';
 import SearchResultContainer from './Component/SearchResultContainer';
-
+import Dumy from './Component/Dumy';
+import Dum2 from './Component/Dum2.js';
  const router = createBrowserRouter([{
   path:"/",
   element:<Body/>,
@@ -23,6 +24,11 @@ import SearchResultContainer from './Component/SearchResultContainer';
     {
       path:'results',
       element:<SearchResultContainer/>
+    },
+    {
+      path: "Dumy",
+      element:       <><Dumy /><Dum2></Dum2></>
+
     }
   ]
  }])

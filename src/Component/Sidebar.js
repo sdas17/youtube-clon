@@ -11,6 +11,7 @@ const Sidebar = () => {
         <ul>
             <Link to={"/"} className="cursor-pointer"><li >Home</li></Link>
             {/* <li className='my-1 p-1 py-2 hover:bg-gray-100 cursor-pointer rounded-lg'><NavLink  to='/'> <img className='inline-block align-bottom mr-3' src={homeIcon} alt="Home" /> Home</NavLink ></li> */}
+            <Link to={"/dumy"} className="cursor-pointer"><li >Dumy</li></Link>
 
             <li>Shorts</li>
             <li>Videos</li>

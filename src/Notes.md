@@ -62,9 +62,13 @@ Perfomance:
  ** -->
 
  press I render component it will the useeffect start timer make an api after 200 ms suppose if even before 200 ms press item button it will bascially destroy method when destory method it will call useffect method method
- 
+
 
  nested level comment
+
+
+ //// use memos and use callback use ref
+ use memos to increase performance cached result between re render  when 
 
 
  
