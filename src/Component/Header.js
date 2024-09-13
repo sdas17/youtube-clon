@@ -1,81 +1,90 @@
 import { useDispatch, useSelector } from "react-redux"
-import {toggleMenu} from "../Utils/appSlice";
-import {chacheResults} from '../Utils/SearchSlice';
+import { toggleMenu } from "../Utils/appSlice";
+import { chacheResults } from '../Utils/SearchSlice';
 import { useEffect, useState } from "react";
-import {youtube_Search_Api} from '../Utils/Constant';
-const Header = () => {
-    const [searchValue,setSearchValue]=useState('')
-    const [suggestion,setSuggestion]=useState([])
-    const [showSuggestions, setShowSuggestions] = useState(false);
-    const searchChache =useSelector((store)=>store.search)
+import { youtube_Search_Api } from '../Utils/Constant';
+import { useNavigate } from "react-router-dom";
 
-    const dispatch=useDispatch();
-    const sidemenuBar =()=>{
+const Header = () => {
+    const [searchValue, setSearchValue] = useState('')
+    const [suggestion, setSuggestion] = useState([])
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const searchChache = useSelector((store) => store.search)
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const sidemenuBar = () => {
         dispatch(toggleMenu())
     }
-    
-   useEffect(()=>{
-    //make api call after key press
-    //time key after >200 ms then only api call is happen
-    //or else decline call
-    if (searchValue) {
-        setShowSuggestions(true)
-    } else {
-        setShowSuggestions(false)
 
+    useEffect(() => {
+        //make api call after key press
+        //time key after >200 ms then only api call is happen
+        //or else decline call
+        if (searchValue) {
+            setShowSuggestions(true)
+        } else {
+            setShowSuggestions(false)
+
+        }
+       
+
+
+        const timer = setTimeout(() => {
+            if (searchChache[searchValue]) {
+                setSuggestion(searchChache[searchValue])
+            } else {
+                fethcApiCalling()
+            }
+        }, 200);
+
+        return () => {
+            clearTimeout(timer); // Use clearTimeout to clear setTimeout
+        };
+
+
+    }, [searchValue])
+    const handleSuggestion = (event) => {
+        setSearchValue(event.target.innerText);
+        setShowSuggestions(false);
+        navigate('/results?search_query=' + encodeURI(event.target.innerText));
     }
+    const fethcApiCalling = async () => {
+        console.log("apicalling-" + searchValue);
 
-    const timer = setTimeout(()=>{
-        if (searchChache[searchValue]) {
-            setSuggestion(searchChache[searchValue])
-         } else {
-            fethcApiCalling()
-         }
-    }, 200); 
+        const jsondata = await fetch(youtube_Search_Api + searchValue);
+        const data = await jsondata.json();
+        setSuggestion(data[1])
+        dispatch(chacheResults({
+            [searchValue]: data[1]
+        }
+        ))
+        console.log(data[1], suggestion);
 
-    return () => {
-        clearTimeout(timer); // Use clearTimeout to clear setTimeout
     };
-
+    /*
+    * key -1
+    -render the component
+    -use effect()
     
-   },[searchValue])
-
-   const fethcApiCalling = async () => {
-    console.log("apicalling-" + searchValue);
+    -start timer => make api call after 200 ms
     
-    const jsondata = await fetch(youtube_Search_Api + searchValue);
-    const data = await jsondata.json();
-    setSuggestion(data[1])
-    dispatch(chacheResults({
-        [searchValue]:data[1]
-    }
-    ))
-    console.log(data[1],suggestion);
+    key-ip
+    -re render the component
+    -useeffect()
+    start timer =>make api call after 200 ms
+    
+    when does clear out kui ki event  
+    
+    key -iph
+    -re render the component
+    useeffect()
+    
+     
+    
+    
+    */
 
-};
-/*
-* key -1
--render the component
--use effect()
-
--start timer => make api call after 200 ms
-
-key-ip
--re render the component
--useeffect()
-start timer =>make api call after 200 ms
-
-when does clear out kui ki event  
-
-key -iph
--re render the component
-useeffect()
-
- 
-
-
-*/    
-  
 
 
     return (
@@ -83,7 +92,7 @@ useeffect()
 
             <div className="flex col-span-1 mx-2">
                 <img alt="menu"
-                onClick={()=>sidemenuBar()}
+                    onClick={() => sidemenuBar()}
                     className="h-8 cursor-pointer"
                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAb1BMVEX///8iICGSkZIkHyEPDA3z8vIyMTEhGx40MDEeHB4jICEeHR4AAAAxMTEgHh4gHB3W1tYtKyyXlpe6uroKBQhzcnJ+fX7CwsKysrJmZWX19fXk5OQYFhc5ODgoJidta2xUVFRfXV7Kysqsq6yjo6MHDa+eAAAB8UlEQVR4nO3c3VLaQBgGYJY/IQtE1Iogrfbn/q+xCaQ2TqtFm222+jwHDC8MMO8EdjnY+QYDAAAAAAAAAAAAAAAAeI/OL4Z5uDhP0m+yXYwzcbX4cJug4d045GN8Pem84GYd+67VUq6/dN7wou9Sjy1u0jQcjUZ9V2skaHhZfUuLbBrGYtN5w8F2HLNpGFOsNIPddlo3XGUgTK9T7BbVFzWbHX+zS1IQAAAAAAAAAABeZJKHVPXO76dHs9msul1OH+JfpOmr0ufuz15Wbhb78uzBvJzPWym2U/XU6Sk+lc6eTnEfv3Zf8PZjeTib2AihnYpwOJl5Qhp1kULY33d/1Pvbp9XTDcO/bhjGl503HD5uUX/Mn1PxTPr964pTUkhygra+hj9U16V10LS6+/pUtFLxTAo/00GCa1j/DhtFDw2Lxw1T/A7rtTRWS+ZhES2rdS3O22lep/qBX1LZSmetFI+pfvzk1HximrW03g9ns4edadboIy2XafbDWt9/Zhqp6gEAAAAAAAAAwAu89Zl7u+00xFXse2ZiLdHcxO24PLx7DpLMvrxcHy9f3+WOUswvHYZVRg2TTNktqnqjTCa0Jmm4WZcZNUwxC3pwd5VPwyLJlN3JdnHV9zD2RqKZ7G9/rj4AAAAAAAAAAAAAAAD8T74DVhZG6MsBqOQAAAAASUVORK5CYII=">
                 </img>
@@ -91,36 +100,45 @@ useeffect()
             </div>
 
 
-       
+
 
             <div className="relative">
 
-            <div className="col-span-10 px-10">
-                <div>
-                    <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)}
-                    // onfocus to show this and obblue hide this
+                <div className="col-span-10 px-10">
+                    <div>
+                        <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)}
+                            // onfocus to show this and obblue hide this
 
-                    onFocus={()=>setShowSuggestions(true)}
-                    onBlur={()=>setShowSuggestions(false)}
-                    class="w-[572px] border border-gray-400 p-2 rounded-l-full focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
-                    />
-                    <button className="border border-gray-400 py-2 px-3 rounded-r-full">🔎</button>
-                </div>
-
-                {(showSuggestions && suggestion?.length >0)&& (
-
-                    <div className="absolute  fixed bg-white py-2 px-5 w-[37rem] shadow rounded-lg border border-gray-400">
-                        <ul>
-                            {suggestion.map((s) => <li className="px-2 py-2 shadow-sm hover:bg-gray-100" key={s}>🔍 {s} </li>
-                            )}
-                        </ul>
+                            onFocus={() => setShowSuggestions(true)}
+                            onBlur={() => setShowSuggestions(false)}
+                            class="w-[572px] border border-gray-400 p-2 rounded-l-full focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+                        />
+                        <button className="border border-gray-400 py-2 px-3 rounded-r-full">🔎</button>
                     </div>
-                )}
+
+                    {(showSuggestions && suggestion?.length > 0) && (
+
+                        <div className="absolute  fixed bg-white py-2 px-5 w-[37rem] shadow rounded-lg border border-gray-400">
+                            <ul>
+                                {suggestion.map((sugg) =>
+                                    // <li className="px-2 py-2 shadow-sm hover:bg-gray-100" key={s} >🔍 {s} </li>
+
+                                    <li key={sugg} onMouseDown={(e) => handleSuggestion(e)} className='my-1 p-1 hover:bg-gray-100 cursor-pointer'>
+                                        <img className='mr-5 h-4 ml-3 inline-block' alt='search-icon' src='https://cdn-icons-png.flaticon.com/512/482/482631.png' />
+                                        <span>{sugg}</span>
+                                    </li>
 
 
+
+                                )}
+                            </ul>
+                        </div>
+                    )}
+
+
+                </div>
             </div>
-            </div>
-           
+
 
             <div className="col-span-1">
                 <img className="h-12 m-0 p-2"
